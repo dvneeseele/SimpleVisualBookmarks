@@ -16,21 +16,9 @@ class bookmarkLabel(QLabel):
     def __init__(self):
         super().__init__()
 
-        # hardcoded link for testing purposes
-        self.setText("<a href=\"https://www.google.com/\">google</a>")
-        self.setTextFormat(Qt.RichText)
-        self.textInteractionFlags(Qt.TextBrowserInteraction)
         self.setOpenExternalLinks(True)
 
-        # hardcode for testing
-        #self.setPixmap(QPixmap("./image.jpg"))
-
-
-    def setPixmap(self, image):
-        return super().setPixmap(image)
-
-
-
-
-
+        # hardcoded link for testing purposes
+        # can't use QPixmap since apparently you can't have an image and text.
+        self.setText('<a href="https://www.google.com"><img src="G:/Dev/Projects/SimpleVisualBookmarks/test.png" width=200 height=200></img></a>')
 

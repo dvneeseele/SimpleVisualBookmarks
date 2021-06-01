@@ -68,6 +68,10 @@ class VisualBookmarksUI(object):
         self.splitter.setSizes([50, 650])
 
         self.boxLayout = QHBoxLayout()
+
+        self.boxLayout.addWidget(self.splitter)
+
+
         self.centralWidget.setLayout(self.boxLayout)
         MainWindow.setCentralWidget(self.centralWidget)
 
