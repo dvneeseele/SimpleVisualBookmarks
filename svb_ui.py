@@ -50,6 +50,11 @@ class VisualBookmarksUI(object):
 
 
         self.bookmarksStack = QStackedWidget(self.splitter)
+
+        testwidget = QWidget()
+
+        self.bookmarksStack.addWidget(testwidget)
+
         self.bookmarksStack.setObjectName("bookmarkstack")
 
 
