@@ -4,7 +4,11 @@
 
 import os
 import sys
-from PyQt5.QtCore import QSize
+
+from page import CatagoryPage
+
+from PyQt5 import QtCore
+from PyQt5.QtCore import QSize, Qt
 from PyQt5.QtWidgets import (QHBoxLayout, QMainWindow, QTabBar, QMenuBar, QSplitter, QWidget, QGridLayout, QTreeView, QStackedWidget, QAction, QToolBar)
 
 
@@ -51,9 +55,9 @@ class VisualBookmarksUI(object):
 
         self.bookmarksStack = QStackedWidget(self.splitter)
 
-        testwidget = QWidget()
+        #testwidget = QWidget()
 
-        self.bookmarksStack.addWidget(testwidget)
+        self.bookmarksStack.addWidget(CatagoryPage())
 
         self.bookmarksStack.setObjectName("bookmarkstack")
 

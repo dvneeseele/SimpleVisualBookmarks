@@ -8,6 +8,7 @@ import sqlite3
 import json
 
 from bmarkLabel import bookmarkLabel
+from svb_ui import VisualBookmarksUI
 
 from PyQt5 import Qt
 from PyQt5.QtWidgets import QMainWindow
@@ -20,7 +21,7 @@ from PyQt5.QtWidgets import QMainWindow
 
 
 
-class VisualBookmarksApp():
+class VisualBookmarksApp(VisualBookmarksUI):
     def __init__(self):
         super().__init__()
 
@@ -39,7 +40,7 @@ class VisualBookmarksApp():
 
 
 
-        self.mainWindow.closeEvent = self.closeEvent
+        #self.mainWindow.closeEvent = self.closeEvent
 
         # call load function
         # self.dbLoad()
