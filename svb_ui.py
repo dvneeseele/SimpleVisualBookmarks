@@ -4,8 +4,8 @@
 
 import os
 import sys
-
-from PyQt5.QtWidgets import (QMainWindow, QTabBar, QMenuBar, QSplitter, QWidget, QGridLayout, QTreeView, QStackedWidget, QAction, QToolBar)
+from PyQt5.QtCore import QSize
+from PyQt5.QtWidgets import (QHBoxLayout, QMainWindow, QTabBar, QMenuBar, QSplitter, QWidget, QGridLayout, QTreeView, QStackedWidget, QAction, QToolBar)
 
 
 
@@ -49,4 +49,18 @@ class VisualBookmarksUI(object):
         self.sidebar.setContextMenuPolicy(QtCore.Qt.CustomContextMenu)
 
 
-        
+        self.bookmarksStack = QStackedWidget(self.splitter)
+        self.bookmarksStack.setObjectName("bookmarkstack")
+
+
+        self.splitter.addWidget(self.sidebar)
+        self.splitter.addWidget(self.bookmarksStack)
+
+        self.splitter.setSizes([50, 650])
+
+        self.boxLayout = QHBoxLayout()
+        self.centralWidget.setLayout(self.boxLayout)
+        MainWindow.setCentralWidget(self.centralWidget)
+
+
+        MainWindow.show()

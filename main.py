@@ -8,3 +8,5 @@ from svb import VisualBookmarksApp
 
 application = QApplication(sys.argv)
 application.setStyle('fusion')
+SVB = VisualBookmarksApp()
+sys.exit(application.exec_())
