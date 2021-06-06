@@ -1,8 +1,8 @@
 
 from bmarkLabel import bookmarkLabel
-from PyQt5.QtWidgets import QAbstractItemView, QTableWidget, QWidget, QGridLayout
+from PyQt5.QtWidgets import QAbstractItemView, QTableWidget, QTableWidgetItem, QWidget, QGridLayout
 from PyQt5.QtCore import Qt
-
+from PyQt5.QtGui import QFont
 
 # class CatagoryPage(QWidget):
 #     def __init__(self):
@@ -38,7 +38,12 @@ class CatagoryPage(QTableWidget):
         self.setWordWrap(False)
         
         self.setColumnCount(4)
+        self.setRowCount(4)
         self.verticalHeader().setDefaultSectionSize(140)
         self.horizontalHeader().setDefaultSectionSize(120)
 
+        self.setCellWidget(0 ,0 , bookmarkLabel())
+        #self.setItem(1,1, QTableWidgetItem(bookmarkLabel()))
 
+    def addBookmark(self):
+        pass
