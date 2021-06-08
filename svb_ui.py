@@ -57,7 +57,10 @@ class VisualBookmarksUI(object):
 
         #testwidget = QWidget()
 
-        self.bookmarksStack.addWidget(CatagoryPage())
+        testwidget = CatagoryPage()
+        testwidget.setObjectName('testpage')
+
+        self.bookmarksStack.addWidget(testwidget)
 
         self.bookmarksStack.setObjectName("bookmarkstack")
 
