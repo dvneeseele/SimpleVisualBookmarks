@@ -4,7 +4,7 @@
 
 import os
 import sys
-from PyQt5.Qt import QApllication, QClipboard 
+#from PyQt5.Qt import QApllication, QClipboard 
 from PyQt5.QtWidgets import QAbstractItemView, QApplication, QWidget, QListWidget, QVBoxLayout, QPushButton
 
 
