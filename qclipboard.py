@@ -5,7 +5,7 @@
 import os
 import sys
 from PyQt5.Qt import QApllication, QClipboard 
-from PyQt5.QtWidgets import QWidget, QListWidget, QVBoxLayout, QPushButton
+from PyQt5.QtWidgets import QAbstractItemView, QApplication, QWidget, QListWidget, QVBoxLayout, QPushButton
 
 
 
@@ -14,10 +14,14 @@ class clipboardGrabber(QWidget):
         super().__init__()
 
 
-        qlist = QListWidget()
+        systemclipboard = QApplication.clipboard()
 
-        clipboard = QClipboard()
+        self.urllist = []
 
-        qlist.addItem()
+        self.clipboardURL = QListWidget()
+        self.clipboardURL.setSelectionModel(QAbstractItemView.ExtendedSelection)
 
+        self.tags = QListWidget()
+        self.tags.setSelectionModel(QAbstractItemView.ExtendedSelection)
 
+        
