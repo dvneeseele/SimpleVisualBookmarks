@@ -5,7 +5,7 @@
 import os
 import sys
 from PyQt5.Qt import Qt
-from PyQt5.QtWidgets import QAbstractItemView, QApplication, QGridLayout, QHBoxLayout, QLineEdit, QMenu, QTreeView, QTreeWidget, QTreeWidgetItem, QWidget, QListWidget, QVBoxLayout, QPushButton
+from PyQt5.QtWidgets import QAbstractItemView, QApplication, QGridLayout, QHBoxLayout, QLineEdit, QListWidgetItem, QMenu, QTreeView, QTreeWidget, QTreeWidgetItem, QWidget, QListWidget, QVBoxLayout, QPushButton
 from PyQt5.QtCore import *
 
 class addBookmarksDialog(QWidget):
@@ -26,8 +26,8 @@ class addBookmarksDialog(QWidget):
 
         childDirectory = QTreeWidgetItem(self.folders)
 
-        urls = QListWidget()
-        urls.setSelectionMode(QAbstractItemView.ExtendedSelection)
+        self.urls = QListWidget()
+        self.urls.setSelectionMode(QAbstractItemView.ExtendedSelection)
         
         tags = QListWidget()
         tags.setSelectionMode(QAbstractItemView.ExtendedSelection)
@@ -45,8 +45,8 @@ class addBookmarksDialog(QWidget):
         layout = QGridLayout()
         self.setLayout(layout)
         layout.addWidget(self.folders, 0,1)
-        layout.addWidget(tags, 0,2)
-        layout.addWidget(urls, 0,3)
+        layout.addWidget(tags, 0,3)
+        layout.addWidget(self.urls, 0,2)
         layout.addWidget(submitBtn, 2, 1)
         layout.addWidget(getClipboardBtn, 2, 2)
         layout.addWidget(addTagBtn, 2, 3)
@@ -64,7 +64,12 @@ class addBookmarksDialog(QWidget):
         pass
 
     def getclipboard(self):
-        pass
+        c = list(QApplication.clipboard().text().split('\n'))
+
+        for i in c:
+            urlitem = QListWidgetItem()
+            urlitem.setText(i)
+            self.urls.addItem(urlitem)
 
 
     def directoryMenu(self, event):
