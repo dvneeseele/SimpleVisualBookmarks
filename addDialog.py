@@ -29,8 +29,8 @@ class addBookmarksDialog(QWidget):
         self.urls = QListWidget()
         self.urls.setSelectionMode(QAbstractItemView.ExtendedSelection)
         
-        tags = QListWidget()
-        tags.setSelectionMode(QAbstractItemView.ExtendedSelection)
+        self.tags = QListWidget()
+        self.tags.setSelectionMode(QAbstractItemView.ExtendedSelection)
 
         submitBtn = QPushButton("Submit")
         submitBtn.clicked.connect(self.submit)
@@ -41,14 +41,16 @@ class addBookmarksDialog(QWidget):
         getClipboardBtn = QPushButton("Get Clipboard")
         getClipboardBtn.clicked.connect(self.getclipboard)
 
+        self.newtag = QLineEdit()
 
         layout = QGridLayout()
         self.setLayout(layout)
         layout.addWidget(self.folders, 0,1)
-        layout.addWidget(tags, 0,3)
+        layout.addWidget(self.tags, 0,3)
         layout.addWidget(self.urls, 0,2)
         layout.addWidget(submitBtn, 2, 1)
         layout.addWidget(getClipboardBtn, 2, 2)
+        layout.addWidget(self.newtag, 3, 3)
         layout.addWidget(addTagBtn, 2, 3)
 
     def set(self, e):
@@ -58,10 +60,13 @@ class addBookmarksDialog(QWidget):
 
 
     def submit(self):
-        pass
+        self.close()
 
     def addtag(self):
-        pass
+        tag = self.newtag.text()
+        item = QListWidgetItem()
+        item.setText(tag)
+        self.tags.addItem(item)
 
     def getclipboard(self):
         c = list(QApplication.clipboard().text().split('\n'))
