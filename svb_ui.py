@@ -6,6 +6,7 @@ import os
 import sys
 
 from page import CatagoryPage
+from dirtree import directories
 
 from PyQt5 import QtCore
 from PyQt5.QtCore import QSize, Qt
@@ -48,10 +49,13 @@ class VisualBookmarksUI(object):
         self.splitter.setStretchFactor(1, 75)
 
 
-        self.sidebar = QTreeView(self.splitter)
-        self.sidebar.setObjectName('sidebartree')
-        self.sidebar.setContextMenuPolicy(QtCore.Qt.CustomContextMenu)
+        # self.sidebar = QTreeView(self.splitter)
+        # self.sidebar.setObjectName('sidebartree')
+        # self.sidebar.setContextMenuPolicy(QtCore.Qt.CustomContextMenu)
 
+        self.sidebar = directories()
+        self.sidebar.setObjectName('sidebartree')
+        self.splitter.addWidget(self.sidebar)
 
         self.bookmarksStack = QStackedWidget(self.splitter)
 
