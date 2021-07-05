@@ -55,9 +55,9 @@ class VisualBookmarksUI(object):
 
         self.sidebar = directories()
         self.sidebar.setObjectName('sidebartree')
-        self.splitter.addWidget(self.sidebar)
+        #self.splitter.addWidget(self.sidebar)
 
-        self.bookmarksStack = QStackedWidget(self.splitter)
+        self.bookmarksStack = QStackedWidget()
 
         #testwidget = QWidget()
 

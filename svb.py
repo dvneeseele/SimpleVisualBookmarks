@@ -9,10 +9,11 @@ import json
 
 from bmarkLabel import bookmarkLabel
 from svb_ui import VisualBookmarksUI
+from dirtree import directories
 
 from PyQt5 import Qt
-from PyQt5.QtWidgets import QMainWindow
-
+from PyQt5.QtWidgets import QMainWindow, QTreeWidgetItem, QMenu
+from PyQt5.QtCore import *
 
 
 
@@ -44,8 +45,4 @@ class VisualBookmarksApp(VisualBookmarksUI):
 
         # call load function
         # self.dbLoad()
-
-
-
-
 

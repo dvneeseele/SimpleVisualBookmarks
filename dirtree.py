@@ -5,9 +5,10 @@
 import os
 import sys
 import json
+from PyQt5 import QtCore
 from PyQt5.Qt import Qt
-from PyQt5.QtWidgets import QTreeWidget ,QAbstractItemView, QTreeWidgetItem, QMenu
-
+from PyQt5.QtWidgets import QTreeWidget, QAbstractItemView, QTreeWidgetItem, QMenu, QApplication
+from PyQt5.QtCore import *
 
 class directories(QTreeWidget):
     def __init__(self):
@@ -20,6 +21,7 @@ class directories(QTreeWidget):
         self.setAcceptDrops(True)
         self.setSelectionMode(QAbstractItemView.SingleSelection)
         self.setContextMenuPolicy(Qt.CustomContextMenu)
+        self.customContextMenuRequested.connect(self.directoryMenu)
 
     def directoryMenu(self, event):
         self.dirContextMenu = QMenu()
@@ -34,7 +36,13 @@ class directories(QTreeWidget):
             current = self.currentItem()
             addSubDir = QTreeWidgetItem()
             addSubDir.setText(0, "Test...")
-            current.addChild(addSubDir)
+            try:
+                current.addChild(addSubDir)
+            except Exception:
+                newroot = QTreeWidgetItem(self)
+                newroot.setText(0, "This is a new root level directory")
+                newroot.setFlags(QtCore.Qt.ItemIsEnabled | QtCore.Qt.ItemIsEditable)
+
         if action == deleteFolder:
             try:
                 current = self.currentItem()
@@ -48,3 +56,11 @@ class directories(QTreeWidget):
             current.setFlags(Qt.ItemIsEnabled | Qt.ItemIsEditable | Qt.ItemIsSelectable)
             currentcol = self.currentIndex()
             self.editItem(current, currentcol.column())
+
+
+
+# if __name__ == '__main__':
+#     app = QApplication(sys.argv)
+#     window = directories()
+#     window.show()
+#     sys.exit(app.exec_())
