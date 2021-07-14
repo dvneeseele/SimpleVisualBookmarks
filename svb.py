@@ -61,9 +61,14 @@ class VisualBookmarksApp(VisualBookmarksUI):
             dbFileErrorMsg = QMessageBox.question(self.mainWindow, 'Error - Database Not Found', 'svb.sqlite db file was not found in the current directory press ok and a new one will be created.', QMessageBox.Ok, QMessageBox.Cancel)
 
         if dbFileErrorMsg == QMessageBox.Ok:
-            self.newDB()
             conn = sqlite3.connect('svb.sqlite')
             cursor = conn.cursor()
+
+
+            foldersTable = "CREATE TABLE IF NOT EXISTS dirs(id TEXT PRIMARY KEY, name TEXT, parentid TEXT, tags TEXT)"
+
+            cursor.execute(foldersTable)
+
         else:
             sys.exit()
 

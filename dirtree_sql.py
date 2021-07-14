@@ -43,6 +43,7 @@ class directories(QTreeWidget):
 
             addSubDir = QTreeWidgetItem()
             addSubDir.setText(0, "Test...")
+            
             if not self.currentIndex().parent().isValid():
                 newroot = QTreeWidgetItem(self)
                 newroot.setText(0, "This is a new root level directory")
