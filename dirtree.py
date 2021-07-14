@@ -14,6 +14,8 @@ class directories(QTreeWidget):
     def __init__(self):
         super().__init__()
 
+        self.treedict = {}
+
         self.setMouseTracking(True)
         self.setHeaderHidden(True)
         self.setDragEnabled(True)
@@ -27,6 +29,7 @@ class directories(QTreeWidget):
         self.dirContextMenu = QMenu()
 
         addFolder = self.dirContextMenu.addAction('Add Folder')
+        addRootFolder = self.dirContextMenu.addAction('Add Root Folder')
         deleteFolder = self.dirContextMenu.addAction('Delete Folder')
         renameFolder = self.dirContextMenu.addAction('Rename Folder')
 
@@ -34,14 +37,35 @@ class directories(QTreeWidget):
 
         if action == addFolder:
             current = self.currentItem()
+            #parentnode = current.parent()
+
             addSubDir = QTreeWidgetItem()
             addSubDir.setText(0, "Test...")
-            try:
-                current.addChild(addSubDir)
-            except Exception:
+            # self.treedict[parentnode] = addSubDir.text()
+            # print(self.treedict)
+            if not self.currentIndex().parent().isValid():
                 newroot = QTreeWidgetItem(self)
                 newroot.setText(0, "This is a new root level directory")
                 newroot.setFlags(QtCore.Qt.ItemIsEnabled | QtCore.Qt.ItemIsEditable)
+                d = {"parent" : "", "name" : newroot.text(), "tags" : []}
+                with open("./treejson/{}.json".format(newroot.text()), 'w') as f:
+                    d.dump()
+            else:
+                current.addChild(addSubDir)
+                parent = current.parent().text()
+                # update the json
+                # if os.path.exists() then append the item to the json file with the filename of the QTreeWidgetItem.text()
+                if os.path.exists("./treejson/{}.json".format(parent), 'w'):
+                    # append to the existing json file
+                    pass
+                else:
+                    pass
+                    # parse skeleton json file add to it and do another with open to save it and close the read
+
+        if action == addRootFolder:
+            newroot = QTreeWidgetItem(self)
+            newroot.setText(0, "New Root Folder")
+            newroot.setFlags(QtCore.Qt.ItemIsEnabled | QtCore.Qt.ItemIsEditable)
 
         if action == deleteFolder:
             try:
