@@ -40,17 +40,26 @@ class directories(QTreeWidget):
         if action == addFolder:
             current = self.currentItem()
             #parentnode = current.parent()
-
             addSubDir = QTreeWidgetItem()
             addSubDir.setText(0, "Test...")
-            
+
             if not self.currentIndex().parent().isValid():
                 newroot = QTreeWidgetItem(self)
                 newroot.setText(0, "This is a new root level directory")
                 newroot.setFlags(QtCore.Qt.ItemIsEnabled | QtCore.Qt.ItemIsEditable)
-                d = {"parent" : "", "name" : newroot.text(), "tags" : []}
-                with open("./treejson/{}.json".format(newroot.text()), 'w') as f:
-                    d.dump()
+
+                conn = sqlite3.connect('svb.sqlite')
+                cursor = conn.cursor()
+
+                randomstr = ''.join(choice(string.ascii_uppercase + string.digits) for t in range(32))
+                print(randomstr)
+
+                insert_tuple = (randomstr, "",  "tag1, tag2")
+
+                cursor.execute("INSERT INTO dirs (id, name, parentid, tags) VALUES (?, ?, ?)", insert_tuple)
+                conn.commit()
+                conn.close()
+
             else:
                 current.addChild(addSubDir)
                 parent = current.parent().text()

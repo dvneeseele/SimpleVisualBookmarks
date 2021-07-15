@@ -6,7 +6,7 @@ import os
 import sys
 
 from page import CatagoryPage
-from dirtree import directories
+from dirtree_sql import directories
 
 from PyQt5 import QtCore
 from PyQt5.QtCore import QSize, Qt

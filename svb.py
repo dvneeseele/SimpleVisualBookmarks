@@ -60,24 +60,34 @@ class VisualBookmarksApp(VisualBookmarksUI):
         else:
             dbFileErrorMsg = QMessageBox.question(self.mainWindow, 'Error - Database Not Found', 'svb.sqlite db file was not found in the current directory press ok and a new one will be created.', QMessageBox.Ok, QMessageBox.Cancel)
 
-        if dbFileErrorMsg == QMessageBox.Ok:
-            conn = sqlite3.connect('svb.sqlite')
-            cursor = conn.cursor()
+            if dbFileErrorMsg == QMessageBox.Ok:
+                conn = sqlite3.connect('svb.sqlite')
+                cursor = conn.cursor()
 
 
-            foldersTable = "CREATE TABLE IF NOT EXISTS dirs(id TEXT PRIMARY KEY, name TEXT, parentid TEXT, tags TEXT)"
+                foldersTable = "CREATE TABLE IF NOT EXISTS dirs(id TEXT PRIMARY KEY, name TEXT, parentid TEXT, tags TEXT)"
 
-            cursor.execute(foldersTable)
+                cursor.execute(foldersTable)
+                conn.close()
 
-        else:
-            sys.exit()
+            else:
+                sys.exit()
 
         # Query to get the treewidget nodes to be loaded
 
         # Another Query to get the corresponding table for the treewidgetitem
 
+        
+        conn = sqlite3.connect('svb.sqlite')
+        cursor = conn.cursor()
+
+        everything = "SELECT * FROM dirs"
+
+        result = cursor.execute(everything)
 
 
+        for row, data in enumerate(result):
+            pass
 
 
 
