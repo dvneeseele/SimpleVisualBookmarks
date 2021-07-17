@@ -14,35 +14,36 @@ from PyQt5.QtCore import *
 
 
 class TreeItem(QTreeWidgetItem):
-    def __init__(self, parent_string, child_string, name, tags):
+    def __init__(self, parent_string='', child_string='', name='', tags=''):
         super().__init__()
 
         self.parentId = parent_string
         self.childId = child_string
         self.itemName = name
+        self.setText(0 ,self.itemName)
         self.tagList = tags
 
-        def props(self):
-            properties = {
-                "parentid" : self.parentId,
-                "childid" : self.childId,
-                "name" : self.itemName,
-                "tags" : self.tags
-            }
-            return properties
+    def props(self):
+        properties = {
+            "parentid" : self.parentId,
+            "childid" : self.childId,
+            "name" : self.itemName,
+            "tags" : self.tags
+        }
+        return properties
 
 
-        def getParentId(self):
-            return self.parentId
+    def getParentId(self):
+        return self.parentId
 
-        def getChildId(self):
-            return self.childId
+    def getChildId(self):
+        return self.childId
 
-        def getItemName(self):
-            return self.itemName
+    def getItemName(self):
+        return self.itemName
 
-        def getTags(self):
-            return self.tagList
+    def getTags(self):
+        return self.tagList
 
 
 
@@ -85,15 +86,23 @@ class directories(QTreeWidget):
             addSubDir.setText(0, "Test...")
 
             if not self.currentIndex().parent().isValid() and not self.currentIndex().isValid():
-                newroot = QTreeWidgetItem(self)
-                newroot.setText(0, "This is a new root level directory")
+
+                randomstr = ''.join(choice(string.ascii_uppercase + string.digits) for t in range(32))
+                #print(randomstr)                
+
+                newroot = TreeItem(randomstr, "", "TestName", "tag1, tag2")
+                #newroot.setText(0 ,"okaythen")
                 newroot.setFlags(QtCore.Qt.ItemIsEnabled | QtCore.Qt.ItemIsEditable)
+                print(newroot.getParentId())
+                self.addTopLevelItem(newroot)
+                #newroot = QTreeWidgetItem(self)
+                #newroot.setText(0, "This is a new root level directory")
+                #newroot.setFlags(QtCore.Qt.ItemIsEnabled | QtCore.Qt.ItemIsEditable)
 
                 conn = sqlite3.connect('svb.sqlite')
                 cursor = conn.cursor()
 
-                randomstr = ''.join(choice(string.ascii_uppercase + string.digits) for t in range(32))
-                print(randomstr)
+
 
 
                 insert_tuple = (randomstr, newroot.text(0),"",  "tag1, tag2")
