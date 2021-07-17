@@ -12,6 +12,47 @@ from PyQt5.Qt import Qt
 from PyQt5.QtWidgets import QTreeWidget, QAbstractItemView, QTreeWidgetItem, QMenu, QApplication
 from PyQt5.QtCore import *
 
+
+class TreeItem(QTreeWidgetItem):
+    def __init__(self, parent_string, child_string, name, tags):
+        super().__init__()
+
+        self.parentId = parent_string
+        self.childId = child_string
+        self.itemName = name
+        self.tagList = tags
+
+        def props(self):
+            properties = {
+                "parentid" : self.parentId,
+                "childid" : self.childId,
+                "name" : self.itemName,
+                "tags" : self.tags
+            }
+            return properties
+
+
+        def getParentId(self):
+            return self.parentId
+
+        def getChildId(self):
+            return self.childId
+
+        def getItemName(self):
+            return self.itemName
+
+        def getTags(self):
+            return self.tagList
+
+
+
+
+
+
+
+
+
+
 class directories(QTreeWidget):
     def __init__(self):
         super().__init__()
@@ -43,7 +84,7 @@ class directories(QTreeWidget):
             addSubDir = QTreeWidgetItem()
             addSubDir.setText(0, "Test...")
 
-            if not self.currentIndex().parent().isValid():
+            if not self.currentIndex().parent().isValid() and not self.currentIndex().isValid():
                 newroot = QTreeWidgetItem(self)
                 newroot.setText(0, "This is a new root level directory")
                 newroot.setFlags(QtCore.Qt.ItemIsEnabled | QtCore.Qt.ItemIsEditable)
@@ -54,23 +95,27 @@ class directories(QTreeWidget):
                 randomstr = ''.join(choice(string.ascii_uppercase + string.digits) for t in range(32))
                 print(randomstr)
 
-                insert_tuple = (randomstr, "",  "tag1, tag2")
 
-                cursor.execute("INSERT INTO dirs (id, name, parentid, tags) VALUES (?, ?, ?)", insert_tuple)
+                insert_tuple = (randomstr, newroot.text(0),"",  "tag1, tag2")
+
+                cursor.execute("INSERT INTO dirs (id, name, parentid, tags) VALUES (?, ? ,?, ?)", insert_tuple)
                 conn.commit()
                 conn.close()
 
             else:
                 current.addChild(addSubDir)
-                parent = current.parent().text()
+                #parent = current.parent().text()
                 # update the json
                 # if os.path.exists() then append the item to the json file with the filename of the QTreeWidgetItem.text()
-                if os.path.exists("./treejson/{}.json".format(parent), 'w'):
-                    # append to the existing json file
-                    pass
-                else:
-                    pass
-                    # parse skeleton json file add to it and do another with open to save it and close the read
+
+                conn = sqlite3.connect('svb.sqlite')
+                cursor = conn.cursor()
+
+                child_id_str = ''.join(choice(string.ascii_uppercase + string.digits) for t in range(32))
+
+                child_tuple = (child_id_str, addSubDir.text(0), "", "tag, misc, testing")
+
+                cursor.execute("INSERT INTO dirs (id, name, parentid, tags) VALUES (?, ?, ?, ?)", child_tuple)
 
         if action == addRootFolder:
             newroot = QTreeWidgetItem(self)

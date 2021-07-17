@@ -3,6 +3,7 @@
 #############################################################################
 
 import os
+import sqlite3
 import sys
 from PyQt5.Qt import Qt
 from PyQt5.QtWidgets import QAbstractItemView, QApplication, QGridLayout, QHBoxLayout, QLineEdit, QListWidgetItem, QMenu, QTreeView, QTreeWidget, QTreeWidgetItem, QWidget, QListWidget, QVBoxLayout, QPushButton
@@ -64,6 +65,7 @@ class addBookmarksDialog(QWidget):
 
     def addtag(self):
         tag = self.newtag.text()
+
         item = QListWidgetItem()
         item.setText(tag)
         self.tags.addItem(item)
