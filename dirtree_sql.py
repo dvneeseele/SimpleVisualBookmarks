@@ -14,11 +14,11 @@ from PyQt5.QtCore import *
 
 
 class TreeItem(QTreeWidgetItem):
-    def __init__(self, parent_string='', child_string='', name='', tags=''):
+    def __init__(self, id='', name='', parent_string='', tags=''):
         super().__init__()
 
         self.parentId = parent_string
-        self.childId = child_string
+        self.itemId= id
         self.itemName = name
         self.setText(0 ,self.itemName)
         self.tagList = tags
@@ -36,8 +36,8 @@ class TreeItem(QTreeWidgetItem):
     def getParentId(self):
         return self.parentId
 
-    def getChildId(self):
-        return self.childId
+    def getItemId(self):
+        return self.itemId
 
     def getItemName(self):
         return self.itemName
@@ -82,49 +82,41 @@ class directories(QTreeWidget):
         if action == addFolder:
             current = self.currentItem()
             #parentnode = current.parent()
-            addSubDir = QTreeWidgetItem()
-            addSubDir.setText(0, "Test...")
 
             if not self.currentIndex().parent().isValid() and not self.currentIndex().isValid():
 
                 randomstr = ''.join(choice(string.ascii_uppercase + string.digits) for t in range(32))
                 #print(randomstr)                
 
-                newroot = TreeItem(randomstr, "", "TestName", "tag1, tag2")
-                #newroot.setText(0 ,"okaythen")
+                newroot = TreeItem(randomstr, "TestName", "",  "tag1, tag2")
                 newroot.setFlags(QtCore.Qt.ItemIsEnabled | QtCore.Qt.ItemIsEditable)
                 print(newroot.getParentId())
                 self.addTopLevelItem(newroot)
-                #newroot = QTreeWidgetItem(self)
-                #newroot.setText(0, "This is a new root level directory")
-                #newroot.setFlags(QtCore.Qt.ItemIsEnabled | QtCore.Qt.ItemIsEditable)
 
                 conn = sqlite3.connect('svb.sqlite')
                 cursor = conn.cursor()
 
-
-
-
-                insert_tuple = (randomstr, newroot.text(0),"",  "tag1, tag2")
+                insert_tuple = (newroot.getItemId() , newroot.getItemName(), newroot.getParentId(), newroot.getTags())
 
                 cursor.execute("INSERT INTO dirs (id, name, parentid, tags) VALUES (?, ? ,?, ?)", insert_tuple)
                 conn.commit()
                 conn.close()
 
             else:
-                current.addChild(addSubDir)
-                #parent = current.parent().text()
-                # update the json
-                # if os.path.exists() then append the item to the json file with the filename of the QTreeWidgetItem.text()
+                child_id = ''.join(choice(string.ascii_uppercase + string.digits) for t in range(32))
+
+                childNode = TreeItem(child_id, "test child name here", current.getItemId(), "tag1, tag2")
+                current.addChild(childNode)
 
                 conn = sqlite3.connect('svb.sqlite')
                 cursor = conn.cursor()
 
-                child_id_str = ''.join(choice(string.ascii_uppercase + string.digits) for t in range(32))
-
-                child_tuple = (child_id_str, addSubDir.text(0), "", "tag, misc, testing")
+                child_tuple = (child_id, childNode.getItemName(), childNode.getParentId(), "tag, misc, testing")
 
                 cursor.execute("INSERT INTO dirs (id, name, parentid, tags) VALUES (?, ?, ?, ?)", child_tuple)
+                conn.commit()
+                conn.close()
+
 
         if action == addRootFolder:
             newroot = QTreeWidgetItem(self)
@@ -139,6 +131,7 @@ class directories(QTreeWidget):
             except Exception:
                 print(Exception)
 
+
         if action == renameFolder:
             current = self.currentItem()
             current.setFlags(Qt.ItemIsEnabled | Qt.ItemIsEditable | Qt.ItemIsSelectable)
@@ -147,8 +140,3 @@ class directories(QTreeWidget):
 
 
 
-# if __name__ == '__main__':
-#     app = QApplication(sys.argv)
-#     window = directories()
-#     window.show()
-#     sys.exit(app.exec_())
