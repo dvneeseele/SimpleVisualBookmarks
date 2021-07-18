@@ -58,8 +58,6 @@ class directories(QTreeWidget):
     def __init__(self):
         super().__init__()
 
-        self.treedict = {}
-
         self.setMouseTracking(True)
         self.setHeaderHidden(True)
         self.setDragEnabled(True)
@@ -81,12 +79,10 @@ class directories(QTreeWidget):
 
         if action == addFolder:
             current = self.currentItem()
-            #parentnode = current.parent()
 
             if not self.currentIndex().parent().isValid() and not self.currentIndex().isValid():
 
                 randomstr = ''.join(choice(string.ascii_uppercase + string.digits) for t in range(32))
-                #print(randomstr)                
 
                 newroot = TreeItem(randomstr, "TestName", "",  "tag1, tag2")
                 newroot.setFlags(QtCore.Qt.ItemIsEnabled | QtCore.Qt.ItemIsEditable)
