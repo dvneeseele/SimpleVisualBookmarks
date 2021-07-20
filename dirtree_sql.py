@@ -67,6 +67,9 @@ class directories(QTreeWidget):
         self.setContextMenuPolicy(Qt.CustomContextMenu)
         self.customContextMenuRequested.connect(self.directoryMenu)
 
+        # this needs to connect to a function that records the new text and updates the json/sqlite storage.
+        self.itemChanged.connect(lambda: print('hahahahahq'))
+
     def directoryMenu(self, event):
         self.dirContextMenu = QMenu()
 
@@ -95,6 +98,12 @@ class directories(QTreeWidget):
                 insert_tuple = (newroot.getItemId() , newroot.getItemName(), newroot.getParentId(), newroot.getTags())
 
                 cursor.execute("INSERT INTO dirs (id, name, parentid, tags) VALUES (?, ? ,?, ?)", insert_tuple)
+
+
+                create_table = 'CREATE TABLE IF NOT EXISTS {} (url TEXT PRIMARY KEY, title TEXT, image BLOB, tags TEXT )'.format(newroot.getItemId())
+
+                cursor.execute(create_table)
+
                 conn.commit()
                 conn.close()
 
@@ -110,6 +119,9 @@ class directories(QTreeWidget):
                 child_tuple = (child_id, childNode.getItemName(), childNode.getParentId(), "tag, misc, testing")
 
                 cursor.execute("INSERT INTO dirs (id, name, parentid, tags) VALUES (?, ?, ?, ?)", child_tuple)
+
+                create_table = 'CREATE TABLE IF NOT EXISTS {} (url TEXT PRIMARY KEY, title TEXT, image BLOB, tags TEXT )'.format(childNode.getItemId())
+
                 conn.commit()
                 conn.close()
 
@@ -123,15 +135,21 @@ class directories(QTreeWidget):
             try:
                 current = self.currentItem()
                 parent = current.parent()
-                current.removeChild(current)
+                if not self.currentIndex().parent().isValid():
+                    current.removeChild(current)
+                    conn = sqlite3.connect('svb.sqlite')
+                    cursor = conn.cursor()
+
+                    cursor.execute("DROP TABLE".format(current.getItemId()))
+
             except Exception:
                 print(Exception)
 
 
         if action == renameFolder:
             current = self.currentItem()
+            currentcol = self.currentIndex()            
             current.setFlags(Qt.ItemIsEnabled | Qt.ItemIsEditable | Qt.ItemIsSelectable)
-            currentcol = self.currentIndex()
             self.editItem(current, currentcol.column())
 
 

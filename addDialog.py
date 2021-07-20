@@ -57,6 +57,14 @@ class addBookmarksDialog(QWidget):
     def set(self, e):
         entry = self.folders.currentIndex()
         print(entry.data())
+
+        conn = sqlite3.connect('svb.sqlite')
+        cursor = conn.cursor()
+
+        add_tuple = ()
+
+        addtablestr = ''
+
         e.accept()
 
 
