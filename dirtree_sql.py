@@ -26,9 +26,9 @@ class TreeItem(QTreeWidgetItem):
     def props(self):
         properties = {
             "parentid" : self.parentId,
-            "childid" : self.childId,
+            #"childid" : self.childId,
             "name" : self.itemName,
-            "tags" : self.tags
+            "tags" : self.tagList
         }
         return properties
 
@@ -44,6 +44,13 @@ class TreeItem(QTreeWidgetItem):
 
     def getTags(self):
         return self.tagList
+
+
+    # def setItemId(self, id):
+    #     self.itemId = id
+
+    # def set
+
 
 
 
@@ -68,7 +75,45 @@ class directories(QTreeWidget):
         self.customContextMenuRequested.connect(self.directoryMenu)
 
         # this needs to connect to a function that records the new text and updates the json/sqlite storage.
-        self.itemChanged.connect(lambda: print('hahahahahq'))
+        #self.itemChanged.connect(self.entryEdited)
+        #self.itemEntered.connect(lambda: print('dissss'))
+
+        self.currentItemChanged.connect(self.switchedItem)
+        
+
+    def switchedItem(self):
+        newId = self.currentItem().getItemId()
+        newName = self.currentItem().getItemName()
+
+        if self.currentItem().parent() != None:
+            parentid = self.currentItem().parent()
+
+            print("Pointer", parentid)
+            print("Parent Id :", parentid.getParentId(), "end")
+
+        print("ID :" ,newId)
+        print("Name :", newName)
+
+
+
+    def keyPressEvent(self, event):
+        # print(event.text())
+        # print(event.key())
+
+        kp = event.key()
+
+        if kp == Qt.Key_Space:
+            # print("fuck")
+            current = self.currentItem()
+
+            # self.closePersistentEditor(current)
+            #self.closeit()
+            print("THISSSS" ,current.text(self.currentColumn()))
+            parent_node = current.parent().getParentId()
+            print("Parent Node :", parent_node)
+        else:
+            pass
+
 
     def directoryMenu(self, event):
         self.dirContextMenu = QMenu()
@@ -100,7 +145,7 @@ class directories(QTreeWidget):
                 cursor.execute("INSERT INTO dirs (id, name, parentid, tags) VALUES (?, ? ,?, ?)", insert_tuple)
 
 
-                create_table = 'CREATE TABLE IF NOT EXISTS {} (url TEXT PRIMARY KEY, title TEXT, image BLOB, tags TEXT )'.format(newroot.getItemId())
+                create_table = 'CREATE TABLE IF NOT EXISTS {} (url TEXT PRIMARY KEY, title TEXT, image BLOB, tags TEXT )'.format(str(newroot.getItemId()))
 
                 cursor.execute(create_table)
 
@@ -110,8 +155,14 @@ class directories(QTreeWidget):
             else:
                 child_id = ''.join(choice(string.ascii_uppercase + string.digits) for t in range(32))
 
+                #print("parent parameter", current.getItemId())
+
                 childNode = TreeItem(child_id, "test child name here", current.getItemId(), "tag1, tag2")
+                #print("props :", childNode.props())
                 current.addChild(childNode)
+
+
+
 
                 conn = sqlite3.connect('svb.sqlite')
                 cursor = conn.cursor()
@@ -121,6 +172,8 @@ class directories(QTreeWidget):
                 cursor.execute("INSERT INTO dirs (id, name, parentid, tags) VALUES (?, ?, ?, ?)", child_tuple)
 
                 create_table = 'CREATE TABLE IF NOT EXISTS {} (url TEXT PRIMARY KEY, title TEXT, image BLOB, tags TEXT )'.format(childNode.getItemId())
+
+                cursor.execute(create_table)
 
                 conn.commit()
                 conn.close()
@@ -147,10 +200,48 @@ class directories(QTreeWidget):
 
 
         if action == renameFolder:
-            current = self.currentItem()
-            currentcol = self.currentIndex()            
-            current.setFlags(Qt.ItemIsEnabled | Qt.ItemIsEditable | Qt.ItemIsSelectable)
-            self.editItem(current, currentcol.column())
+            self.entryEdited()
+            # current = self.currentItem()
+            # currentcol = self.currentIndex()            
+            # current.setFlags(Qt.ItemIsEnabled | Qt.ItemIsEditable | Qt.ItemIsSelectable)
+            # self.editItem(current, currentcol.column())
+
+
+    def closeit(self):
+        current = self.currentItem()
+        self.closePersistentEditor(current)
+        
+
+
+    def entryEdited(self):
+        current = self.currentItem()
+        name = current.getItemName()
+        itm_id = current.getItemId()
+        #print(itm_id)
+        #print(name)
+
+        #conn = sqlite3.connect('svb.sqlite')
+        #cursor = conn.cursor()
+
+        #update_tuple = (current.getItemId(), )
+
+        #cursor.execute("SELECT * WHERE id CONTAINS {}".format(current.getItemId()))
+
+        #cursor.execute("UPDATE ? SET name = ?")
+
+        currentcol = self.currentIndex()            
+        current.setFlags(Qt.ItemIsEnabled | Qt.ItemIsEditable | Qt.ItemIsSelectable)
+        self.editItem(current, currentcol.column())
+
+        print("new item text :", self.currentItem().text(0))
+
+        # self.openPersistentEditor(current, self.currentColumn())
+        # current.setFlags(Qt.ItemIsEnabled | Qt.ItemIsSelectable)
+
+
+        #alter_str = 'ALTER TABLE {} RENAME TO {}'.format(itm_id, )
+
+        #self.openPersistentEditor(current)
 
 
 
