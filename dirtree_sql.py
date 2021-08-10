@@ -171,8 +171,10 @@ class directories(QTreeWidget):
 
                 cursor.execute("INSERT INTO dirs (id, name, parentid, tags) VALUES (?, ?, ?, ?)", child_tuple)
 
-                create_table = 'CREATE TABLE IF NOT EXISTS {} (url TEXT PRIMARY KEY, title TEXT, image BLOB, tags TEXT )'.format(childNode.getItemId())
-
+                create_table = 'CREATE TABLE IF NOT EXISTS [{}] (url TEXT PRIMARY KEY, title TEXT, image BLOB, tags TEXT )'.format(str(childNode.getItemId()))
+                print("childid :", create_table)
+                #cursor.execute("""CREATE TABLE IF NOT EXISTS "?" (url TEXT PRIMARY KEY, title TEXT, image BLOB, tags TEXT)""", (childNode.getItemId()))
+                
                 cursor.execute(create_table)
 
                 conn.commit()
@@ -185,18 +187,22 @@ class directories(QTreeWidget):
             newroot.setFlags(QtCore.Qt.ItemIsEnabled | QtCore.Qt.ItemIsEditable)
 
         if action == deleteFolder:
-            try:
-                current = self.currentItem()
-                parent = current.parent()
-                if not self.currentIndex().parent().isValid():
-                    current.removeChild(current)
-                    conn = sqlite3.connect('svb.sqlite')
-                    cursor = conn.cursor()
 
-                    cursor.execute("DROP TABLE".format(current.getItemId()))
+            current = self.currentItem()
+            parent = current.parent()
+            if self.currentIndex().parent().isValid():
+                current.removeChild(current)
+                conn = sqlite3.connect('svb.sqlite')
+                cursor = conn.cursor()
 
-            except Exception:
-                print(Exception)
+                del_tuple = ("DROP TABLE [{}]".format(current.getItemId()))
+                print("DROP TABLE",del_tuple)
+
+                cursor.execute(del_tuple)
+
+                conn.commit()
+                conn.close()
+
 
 
         if action == renameFolder:
