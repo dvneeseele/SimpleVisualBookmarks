@@ -30,7 +30,7 @@ class Catagories(QListWidget):
 
         addCatagory = self.catagoryContextMenu.addAction('Add Catagory')
         deleteCatagory = self.catagoryContextMenu.addAction('Delete Catagory')
-        renameCatagory = self.catagoryContextMenu.addAction('Delete Catagory')
+        renameCatagory = self.catagoryContextMenu.addAction('Rename Catagory')
 
         action = self.catagoryContextMenu.exec_(self.mapToGlobal(event))
 
@@ -42,10 +42,17 @@ class Catagories(QListWidget):
         if action == deleteCatagory:
             selection = self.currentItem()
             print(selection)
-            self.takeItem(selection)
+            self.takeItem(self.row(selection))
 
         if action == renameCatagory:
             selection = self.currentItem()
+            selection.setFlags(Qt.ItemIsEnabled | Qt.ItemIsEditable | Qt.ItemIsSelectable)
             self.editItem(selection)
-            
+
         
+
+if __name__ == '__main__':
+    app = QApplication(sys.argv)
+    window = Catagories()
+    window.show()
+    sys.exit(app.exec_())
