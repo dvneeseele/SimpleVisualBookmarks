@@ -192,8 +192,23 @@ class directories(QTreeWidget):
             parent = current.parent()
             if self.currentIndex().parent().isValid():
                 current.removeChild(current)
+
                 conn = sqlite3.connect('svb.sqlite')
                 cursor = conn.cursor()
+
+                # sqlite search for the current item
+                itmId = current.getItemId()
+                query = "SELECT parentid FROM {} WHERE parentid = {}".format(itmId, itmId)
+                print("Query --> ", query)
+                # get child entries of the current in the database
+                childResults = cursor.execute(query)
+                # iterate throught the child results and query for their children if they exist and delete them
+                for r in enumerate(childResults):
+                    search = "SELECT parentid FROM {} WHERE parentid = {}".format(r, r)
+                    print(search)
+
+                    result = cursor.execute(search)
+
 
                 del_tuple = ("DROP TABLE [{}]".format(current.getItemId()))
                 print("DROP TABLE",del_tuple)
