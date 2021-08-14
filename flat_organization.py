@@ -13,6 +13,27 @@ from PyQt5.QtWidgets import QListWidget, QListWidgetItem, QTreeWidget, QAbstract
 from PyQt5.QtCore import *
 
 
+
+class catagoryItem(QListWidgetItem):
+    def __init__(self, id='', name=''):
+        super().__init__()
+
+        self.itemId = id
+        self.title = name
+
+        self.setText(self.title)
+    
+    def getItemId(self):
+        return self.itemId
+
+    def getTitle(self):
+        return self.title
+
+
+
+
+
+
 class Catagories(QListWidget):
     def __init__(self):
         super().__init__()
@@ -35,14 +56,42 @@ class Catagories(QListWidget):
         action = self.catagoryContextMenu.exec_(self.mapToGlobal(event))
 
         if action == addCatagory:
-            catagory = QListWidgetItem()
-            catagory.setText("Test Text.....")
+
+            randomstr = ''.join(choice(string.ascii_uppercase + string.digits) for t in range(32))
+
+            catagory = catagoryItem(randomstr, "Test Text.....")
+            #catagory.setText(0, "Test Text.....")
             self.addItem(catagory)
+
+            conn = sqlite3.connect('svb.sqlite')
+            cursor = conn.cursor()
+
+
+
+            addtuple = (catagory.getItemId(), catagory.text())
+
+            cursor.execute("INSERT INTO dirs (id, name) VALUES (?, ?)", addtuple)
+            cursor.execute("CREATE TABLE IF NOT EXISTS [{}] (url TEXT PRIMARY KEY, title TEXT, image BLOB, tags TEXT)".format(catagory.getItemId()))
+
+            conn.commit()
+            conn.close()
 
         if action == deleteCatagory:
             selection = self.currentItem()
             print(selection)
             self.takeItem(self.row(selection))
+
+            # drop table
+
+            conn = sqlite3.connect('svb.sqlite')
+            cursor = conn.cursor()
+
+            cursor.execute("DELETE FROM dirs WHERE id = {}".format(selection.objectName()))
+            cursor.execute("DROP TABLE [{}]".format())
+            
+            conn.commit()
+            conn.close()
+
 
         if action == renameCatagory:
             selection = self.currentItem()
@@ -51,8 +100,8 @@ class Catagories(QListWidget):
 
         
 
-if __name__ == '__main__':
-    app = QApplication(sys.argv)
-    window = Catagories()
-    window.show()
-    sys.exit(app.exec_())
+# if __name__ == '__main__':
+#     app = QApplication(sys.argv)
+#     window = Catagories()
+#     window.show()
+#     sys.exit(app.exec_())

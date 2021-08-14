@@ -7,6 +7,7 @@ import sys
 
 from page import CatagoryPage
 from dirtree_sql import directories
+from flat_organization import Catagories
 
 from PyQt5 import QtCore
 from PyQt5.QtCore import QSize, Qt
@@ -53,7 +54,8 @@ class VisualBookmarksUI(object):
         # self.sidebar.setObjectName('sidebartree')
         # self.sidebar.setContextMenuPolicy(QtCore.Qt.CustomContextMenu)
 
-        self.sidebar = directories()
+        #self.sidebar = directories()
+        self.sidebar = Catagories()
         self.sidebar.setObjectName('sidebartree')
         #self.splitter.addWidget(self.sidebar)
 

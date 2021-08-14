@@ -65,9 +65,10 @@ class VisualBookmarksApp(VisualBookmarksUI):
                 cursor = conn.cursor()
 
 
-                foldersTable = "CREATE TABLE IF NOT EXISTS dirs(id TEXT PRIMARY KEY, name TEXT, parentid TEXT, tags TEXT)"
+                #foldersTable = "CREATE TABLE IF NOT EXISTS dirs(id TEXT PRIMARY KEY, name TEXT, parentid TEXT, tags TEXT)"
+                catagoryTable = "CREATE TABLE IF NOT EXISTS dirs(id TEXT PRIMARY KEY, name TEXT)"
 
-                cursor.execute(foldersTable)
+                cursor.execute(catagoryTable)
                 conn.close()
 
             else:
