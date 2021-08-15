@@ -86,8 +86,8 @@ class Catagories(QListWidget):
             conn = sqlite3.connect('svb.sqlite')
             cursor = conn.cursor()
 
-            cursor.execute("DELETE FROM dirs WHERE id = {}".format(selection.objectName()))
-            cursor.execute("DROP TABLE [{}]".format())
+            cursor.execute("DELETE FROM dirs WHERE id = '{}'".format(selection.getItemId()))
+            cursor.execute("DROP TABLE [{}]".format(selection.getItemId()))
             
             conn.commit()
             conn.close()
