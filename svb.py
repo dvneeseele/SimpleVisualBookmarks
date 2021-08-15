@@ -67,7 +67,7 @@ class VisualBookmarksApp(VisualBookmarksUI):
 
                 #foldersTable = "CREATE TABLE IF NOT EXISTS dirs(id TEXT PRIMARY KEY, name TEXT, parentid TEXT, tags TEXT)"
                 catagoryTable = "CREATE TABLE IF NOT EXISTS dirs(id TEXT PRIMARY KEY, name TEXT)"
-                tagsTable = "CREATE TABLE IF NOT EXISTS tags(id TEXT PRIMARY KEY, name TEXT"
+                tagsTable = "CREATE TABLE IF NOT EXISTS tags(id TEXT PRIMARY KEY, name TEXT)"
 
                 cursor.execute(catagoryTable)
                 cursor.execute(tagsTable)

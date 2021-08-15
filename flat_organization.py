@@ -38,6 +38,8 @@ class tagItem(QListWidgetItem):
         self.tagId = id
         self.tagName = name
 
+        self.setText(self.tagName)
+
     def getTagId(self):
         return self.tagId
 
@@ -146,7 +148,27 @@ class tagsList(QListWidget):
         self.setContextMenuPolicy(Qt.CustomContextMenu)
         self.customContextMenuRequested.connect(self.tagMenu)
 
-        #self.itemChanged.connect(self.change)
+        self.itemChanged.connect(self.change)
+
+
+
+    def change(self):
+        print(self.currentItem().text())
+
+        new = self.currentItem()
+
+        update = "UPDATE tags SET name = '{}' WHERE id = '{}' ".format(new.text(), new.getTagId())
+
+        conn = sqlite3.connect('svb.sqlite')
+        cursor = conn.cursor()
+
+        cursor.execute(update)
+
+        conn.commit()
+        conn.close()
+
+
+
 
     def tagMenu(self, event):
         self.tagContextMenu = QMenu()
@@ -186,8 +208,8 @@ class tagsList(QListWidget):
             conn = sqlite3.connect('svb.sqlite')
             cursor = conn.cursor()
 
-            cursor.execute("DELETE FROM tags WHERE id = '{}'".format(tag.getTagId()))
-            cursor.execute("DROP TABLE [{}]".format(tag.getTagId()))
+            cursor.execute("DELETE FROM tags WHERE id = '{}'".format(selection.getTagId()))
+            cursor.execute("DROP TABLE [{}]".format(selection.getTagId()))
 
             conn.commit()
             conn.close()
