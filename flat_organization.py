@@ -45,6 +45,26 @@ class Catagories(QListWidget):
         self.setContextMenuPolicy(Qt.CustomContextMenu)
         self.customContextMenuRequested.connect(self.catagoryMenu)
 
+        self.itemChanged.connect(self.change)
+
+
+
+    def change(self):
+        print(self.currentItem().text())
+
+        new = self.currentItem()
+
+        #alter = "ALTER TABLE {} RENAME TO {}".format(new.getItemId(), new.text())
+        # find table with same id in dirs and change the name entry.
+        update = "UPDATE dirs SET name = '{}' WHERE id = '{}' ".format(new.text(), new.getItemId())
+
+        conn = sqlite3.connect('svb.sqlite')
+        cursor = conn.cursor()
+
+        cursor.execute(update)
+
+        conn.commit()
+        conn.close()
 
     def catagoryMenu(self, event):
         self.catagoryContextMenu = QMenu()
@@ -98,7 +118,7 @@ class Catagories(QListWidget):
             selection.setFlags(Qt.ItemIsEnabled | Qt.ItemIsEditable | Qt.ItemIsSelectable)
             self.editItem(selection)
 
-        
+    
 
 # if __name__ == '__main__':
 #     app = QApplication(sys.argv)
