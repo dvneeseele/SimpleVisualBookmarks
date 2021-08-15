@@ -3,6 +3,7 @@
 #############################################################################
 
 import os
+from sqlite3.dbapi2 import Cursor
 import sys
 import sqlite3
 import string
@@ -31,7 +32,17 @@ class catagoryItem(QListWidgetItem):
 
 
 class tagItem(QListWidgetItem):
-    pass
+    def __init__(self, id='', name=''):
+        super().__init__()
+
+        self.tagId = id
+        self.tagName = name
+
+    def getTagId(self):
+        return self.tagId
+
+    def getTagName(self):
+        return self.tagName
 
 
 
@@ -133,9 +144,9 @@ class tagsList(QListWidget):
         self.setSelectionMode(QAbstractItemView.SingleSelection)
         self.setMouseTracking(True)
         self.setContextMenuPolicy(Qt.CustomContextMenu)
-        self.customContextMenuRequested.connect(self.catagoryMenu)
+        self.customContextMenuRequested.connect(self.tagMenu)
 
-        self.itemChanged.connect(self.change)
+        #self.itemChanged.connect(self.change)
 
     def tagMenu(self, event):
         self.tagContextMenu = QMenu()
@@ -150,7 +161,41 @@ class tagsList(QListWidget):
 
             randomstr = ''.join(choice(string.ascii_uppercase + string.digits) for t in range(32))
 
-            tag = tagItem()
+            tag = tagItem(randomstr, "Tag Here....")
+
+            self.addItem(tag)
+
+            conn = sqlite3.connect('svb.sqlite')
+            cursor = conn.cursor()
+
+            addTagTuple = (tag.getTagId(), tag.text())
+
+            cursor.execute("INSERT INTO tags (id, name) VALUES (?, ?)", addTagTuple)
+
+            cursor.execute("CREATE TABLE IF NOT EXISTS [{}] (url TEXT PRIMARY KEY, title TEXT, image BLOB, tags TEXT)".format(tag.getTagId()))
+
+            conn.commit()
+            conn.close()
+
+        if action == deleteTag:
+
+            selection = self.currentItem()
+            print(selection)
+            self.takeItem(self.row(selection))
+
+            conn = sqlite3.connect('svb.sqlite')
+            cursor = conn.cursor()
+
+            cursor.execute("DELETE FROM tags WHERE id = '{}'".format(tag.getTagId()))
+            cursor.execute("DROP TABLE [{}]".format(tag.getTagId()))
+
+            conn.commit()
+            conn.close()
+
+        if action == renameTag:
+            selection = self.currentItem()
+            selection.setFlags(Qt.ItemIsEnabled | Qt.ItemIsEditable | Qt.ItemIsSelectable)
+            self.editItem(selection)
 
 
 

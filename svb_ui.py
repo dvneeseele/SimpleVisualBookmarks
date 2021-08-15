@@ -7,7 +7,7 @@ import sys
 
 from page import CatagoryPage
 from dirtree_sql import directories
-from flat_organization import Catagories
+from flat_organization import Catagories, tagsList
 
 from PyQt5 import QtCore
 from PyQt5.QtCore import QSize, Qt
@@ -49,6 +49,11 @@ class VisualBookmarksUI(object):
         self.splitter.setStretchFactor(0, 25)
         self.splitter.setStretchFactor(1, 75)
 
+        self.vertSplitter = QSplitter(self.centralWidget)
+        self.vertSplitter.setOrientation(Qt.Vertical)
+        self.vertSplitter.setStretchFactor(0, 25)
+        self.vertSplitter.setStretchFactor(1, 75)
+
 
         # self.sidebar = QTreeView(self.splitter)
         # self.sidebar.setObjectName('sidebartree')
@@ -66,19 +71,36 @@ class VisualBookmarksUI(object):
         testwidget = CatagoryPage()
         testwidget.setObjectName('testpage')
 
+
+        tagsPanel = tagsList()
+        tagsPanel.setObjectName('tagsPanel')
+
+
+
         self.bookmarksStack.addWidget(testwidget)
 
         self.bookmarksStack.setObjectName("bookmarkstack")
 
 
-        self.splitter.addWidget(self.sidebar)
+
+        self.vertSplitter.addWidget(self.sidebar)
+        self.vertSplitter.addWidget(tagsPanel)
+        self.vertSplitter.addWidget(self.splitter)
+
+        #self.splitter.addWidget(self.vertSplitter)
         self.splitter.addWidget(self.bookmarksStack)
 
-        self.splitter.setSizes([50, 650])
+
+        self.splitter.setSizes([50, 650, 100])
+        #self.vertSplitter.setSizes([50, 650, 50])
+
+
+
 
         self.boxLayout = QHBoxLayout()
-
+        self.boxLayout.addWidget(self.vertSplitter)
         self.boxLayout.addWidget(self.splitter)
+
 
 
         self.centralWidget.setLayout(self.boxLayout)
