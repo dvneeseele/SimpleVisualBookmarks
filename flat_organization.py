@@ -30,7 +30,8 @@ class catagoryItem(QListWidgetItem):
         return self.title
 
 
-
+class tagItem(QListWidgetItem):
+    pass
 
 
 
@@ -120,8 +121,45 @@ class Catagories(QListWidget):
 
     
 
-# if __name__ == '__main__':
-#     app = QApplication(sys.argv)
-#     window = Catagories()
-#     window.show()
-#     sys.exit(app.exec_())
+
+
+
+class tagsList(QListWidget):
+    def __init__(self):
+        super().__init__()
+
+        self.setAcceptDrops(True)
+        self.setDragDropMode(QAbstractItemView.InternalMove)
+        self.setSelectionMode(QAbstractItemView.SingleSelection)
+        self.setMouseTracking(True)
+        self.setContextMenuPolicy(Qt.CustomContextMenu)
+        self.customContextMenuRequested.connect(self.catagoryMenu)
+
+        self.itemChanged.connect(self.change)
+
+    def tagMenu(self, event):
+        self.tagContextMenu = QMenu()
+
+        addTag = self.tagContextMenu.addAction('Add New Tag')
+        deleteTag = self.tagContextMenu.addAction('Delete Tag')
+        renameTag = self.tagContextMenu.addAction('Rename Tag')
+
+        action = self.tagContextMenu.exec_(self.mapToGlobal(event))
+
+        if action == addTag:
+
+            randomstr = ''.join(choice(string.ascii_uppercase + string.digits) for t in range(32))
+
+            tag = tagItem()
+
+
+
+
+
+
+
+
+
+
+
+
